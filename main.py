@@ -1,7 +1,6 @@
 import os
 import time
-from util import HTTP
-from util import LXML
+from util import HTTP, LXML
 from pymongo import MongoClient
 from concurrent.futures import ThreadPoolExecutor
 from model import HDQWallsModel, OriginalFileInfoModel

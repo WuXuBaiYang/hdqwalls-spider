@@ -4,6 +4,12 @@ class OriginalFileInfoModel:
     """
 
     def __init__(self):
+        self.download_url = ""
+        self.width = 0
+        self.height = 0
+        self.file_name = ""
+        self.file_format = ""
+        self.file_size = 0
         pass
 
     # 原始图片下载地址

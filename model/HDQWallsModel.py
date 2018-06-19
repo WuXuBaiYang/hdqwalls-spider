@@ -5,6 +5,15 @@ class HDQWallsModel:
 
     def __init__(self, create_timestamp):
         self.create_timestamp = create_timestamp
+        self.title = ""
+        self.detail_url = ""
+        self.category_list = []
+        self.category_list_cn = []
+        self.author = ""
+        self.author_link = ""
+        self.original_resolution = ""
+        self.original_file_info = {}
+        self.update_timestamp = 0
         pass
 
     # 名称
