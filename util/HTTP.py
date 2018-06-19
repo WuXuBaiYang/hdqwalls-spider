@@ -1,6 +1,3 @@
-import os
-import time
-import json
 import requests
 from random import choice
 
@@ -24,15 +21,6 @@ user_agent_list = [
     "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/5.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; InfoPath.3; .NET4.0C; .NET4.0E) QQBrowser/6.9.11079.201",
     "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)"
 ]
-# 代理列表
-https_proxies_list = []
-
-# 代理服务器列表缓存文件路径
-proxies_file_path = os.path.abspath('.') + "/proxies.json"
-proxies_refresh_time = 5 * 60
-
-# 代理提取地址
-proxies_url = "http://webapi.http.zhimacangku.com/getip?num=20&type=2&pro=&city=0&yys=0&port=11&pack=23142&ts=0&ys=0&cs=0&lb=1&sb=0&pb=4&mr=1&regions="
 
 
 def get_headers():
@@ -49,22 +37,7 @@ def get_proxies():
     获取代理
     :return: 获取代理参数
     """
-    # 如果文件不存在或者文件的修改时间与当前时间相差刷新时间，则重新请求并读取文件
-    if not os.path.exists(proxies_file_path) or time.time() - os.path.getmtime(
-            proxies_file_path) >= proxies_refresh_time:
-        # 提取代理ip
-        content = requests.get(proxies_url).content
-        with open(proxies_file_path, "w") as file:
-            file.write(content.decode())
-        # 读取json到内存
-        read_proxies_from_json(content)
-        pass
-    elif len(https_proxies_list) == 0:
-        # 如果https的缓存列表为空，则从文件中读取
-        with open(proxies_file_path, "r") as file:
-            read_proxies_from_json(file.read())
-        pass
-    return {"https": https_proxies_list[0]}
+    return {"http": "http://127.0.0.1:1087", "https": "https://127.0.0.1:1087"}
 
 
 def get(request_url):
@@ -74,19 +47,3 @@ def get(request_url):
     :return: 返回request的请求对象
     """
     return requests.get(request_url, headers=get_headers())
-
-
-def read_proxies_from_json(json_string):
-    """
-    从json中读取代理ip缓存到内存
-    :param json_string:
-    :return:
-    """
-    proxies_json = json.loads(json_string)
-    if proxies_json.get("success"):
-        ip_address_list = proxies_json.get("data")
-        for ip_address in ip_address_list:
-            ip = ip_address.get("ip")
-            port = ip_address.get("port")
-            https_proxies_list.append("https://" + ip + ":" + str(port))
-    pass

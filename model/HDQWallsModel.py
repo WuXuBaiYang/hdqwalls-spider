@@ -8,7 +8,7 @@ class HDQWallsModel:
         pass
 
     # 名称
-    name = ""
+    title = ""
     # 详情页地址
     detail_url = ""
     # 分类列表

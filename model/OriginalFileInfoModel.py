@@ -3,17 +3,18 @@ class OriginalFileInfoModel:
     原始文件信息
     """
 
-    def __init__(self, original_download_url):
-        self.original_download_url = original_download_url
+    def __init__(self):
         pass
 
     # 原始图片下载地址
-    original_download_url = ""
+    download_url = ""
     # 原始图片宽度
-    original_width = 0
+    width = 0
     # 原始图片高度
-    original_height = 0
-    # 原始图片文件大小
-    original_file_size = 0
+    height = 0
+    # 原始图片文件名
+    file_name = ""
     # 原始图片格式
-    original_file_format = ""
+    file_format = ""
+    # 原始图片文件大小
+    file_size = 0
