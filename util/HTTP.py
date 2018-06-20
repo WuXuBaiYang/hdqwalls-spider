@@ -46,4 +46,4 @@ def get(request_url):
     :param request_url: 请求地址
     :return: 返回request的请求对象
     """
-    return requests.get(request_url, headers=get_headers())
+    return requests.get(request_url, headers=get_headers(), proxies=get_proxies())
