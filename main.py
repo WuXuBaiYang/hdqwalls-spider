@@ -97,7 +97,7 @@ def parse_paging(index):
                 selector = LXML.get_selector(response.content)
                 for tag in selector.xpath("//a[@class='caption hidden-md hidden-sm hidden-xs']"):
                     url = base_url + tag.get("href")
-                    title = tag.get("title")
+                    title = tag.get("title").rstrip("Wallpaper").strip()
                     executor.submit(parse_wallpaper_detail, url, title)
                 executor.shutdown()
                 parse_paging(index + 1)
