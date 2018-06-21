@@ -14,7 +14,7 @@ db_collection = db_client.python_spider.hdqwalls_spider
 
 # 起始终止位置
 START_PAGING_INDEX = 1
-END_PAGING_INDEX = 3
+END_PAGING_INDEX = 20
 
 # 重试间隔
 RETRY_INTERVAL = 2
@@ -51,7 +51,7 @@ def parse_wallpaper_detail(url, title):
     response = HTTP.get(url)
     if response.status_code == 200:
         selector = LXML.get_selector(response.content)
-        model.author = LXML.get_first_attr_text(selector, "//a[@href and @target and @class]/i", "佚名")
+        model.author = LXML.get_first_attr_text(selector, "//a[@href and @target and @class]/i", "佚名").lstrip()
         model.author_link = LXML.get_first_attr(selector, "//a[@href and @target and @class]/i/..", "href", "")
         model.original_resolution = LXML.get_first_attr_text(selector, "//blockquote/footer/a[not(@style)]").lstrip()
         # 解析分类标签(仅英文)
