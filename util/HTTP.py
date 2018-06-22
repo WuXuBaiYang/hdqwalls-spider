@@ -40,10 +40,11 @@ def get_proxies():
     return {"http": "http://127.0.0.1:1087", "https": "https://127.0.0.1:1087"}
 
 
-def get(request_url):
+def get(request_url, use_proxy=True):
     """
     发起http/https get请求 proxies=get_proxies(),
+    :param use_proxy:
     :param request_url: 请求地址
     :return: 返回request的请求对象
     """
-    return requests.get(request_url, headers=get_headers(), proxies=get_proxies())
+    return requests.get(request_url, headers=get_headers(), proxies=get_proxies() if use_proxy else {})
