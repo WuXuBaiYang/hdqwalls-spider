@@ -11,7 +11,7 @@ db_client = MongoClient(host="127.0.0.1", port=27017)
 db_collection = db_client.python_spider.hdqwalls_spider
 
 # 最大并发数
-MAX_WORKS = 20
+MAX_WORKS = 30
 # 重试间隔
 RETRY_INTERVAL = 2
 
@@ -27,8 +27,7 @@ def download_file(item_dict):
     """
     original_file_info = item_dict["original_file_info"]
     download_url = original_file_info["download_url"]
-    print("正在下载图片", download_url)
-    response = HTTP.get(download_url)
+    response = HTTP.get(download_url, use_proxy=True)
     if response.status_code == 200:
         file_format = original_file_info["file_format"]
         file_name = hashlib.md5(download_url.encode("gbk")).hexdigest()
@@ -43,6 +42,7 @@ def download_file(item_dict):
         # 信息赋值并写入数据库
         item_dict["original_file_info"] = original_file_info
         db_collection.update({"detail_url": item_dict["detail_url"]}, item_dict, upsert=True)
+        print("图片下载完成", download_url)
     elif response.status_code == 401:
         print("ip已被封禁，下载停止")
     else:
