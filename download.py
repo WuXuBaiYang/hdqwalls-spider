@@ -16,7 +16,7 @@ MAX_WORKS = 30
 RETRY_INTERVAL = 2
 
 # 当前图片缓存目录
-photos_cache_path = os.path.dirname(__file__) + "/photos_cache"
+photos_cache_path = "/Volumes/移动城堡/original_image"
 
 
 def download_file(item_dict):
@@ -35,6 +35,7 @@ def download_file(item_dict):
         with open(file_path, "wb") as f:
             f.write(response.content)
         # 读取文件信息
+        Image.MAX_IMAGE_PIXELS = 1000000000
         image = Image.open(file_path)
         original_file_info["width"] = image.width
         original_file_info["height"] = image.height
