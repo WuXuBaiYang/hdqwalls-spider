@@ -50,5 +50,5 @@ def page_upload(page, limit):
 
 # 入口
 if __name__ == "__main__":
-    page_upload(144, 50)
+    page_upload(0, 50)
     pass
