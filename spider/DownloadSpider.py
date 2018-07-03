@@ -1,5 +1,7 @@
 import os
+import oss2
 import time
+import json
 import hashlib
 from PIL import Image
 from util import HTTP
@@ -17,6 +19,35 @@ RETRY_INTERVAL = 2
 
 # 当前图片缓存目录
 photos_cache_path = "/Volumes/移动城堡/original_image"
+# oss的accesskey路径
+oss_access_key_file = "/Users/jianghan/Documents/WallpaperProject/AccessKey.json"
+
+
+def get_o_clock_of_today():
+    local_time = time.localtime(time.time())
+    o_clock = time.mktime(time.strptime(time.strftime('%Y-%m-%d 00:00:00', local_time), '%Y-%m-%d %H:%M:%S'))
+    return int(o_clock)
+
+
+def upload_file():
+    """
+    文件上传到oss
+    :return:
+    """
+    with open(oss_access_key_file, "r") as f:
+        access_key = json.loads(f.read(), encoding="UTF-8")
+    auth = oss2.Auth(access_key["AccessKeyId"], access_key["AccessKeySecret"])
+    bucket = oss2.Bucket(auth, access_key["Endpoint"], access_key["Bucket"])
+    with ThreadPoolExecutor(MAX_WORKS) as executor:
+        for root, dirs, files in os.walk(photos_cache_path):
+            for file in files:
+                file_path = os.path.join(root, file)
+                if os.path.getctime(file_path) > get_o_clock_of_today():
+                    executor.submit(bucket.put_object_from_file, "original_image/" + file, file_path)
+                    print("正在上传", file)
+        executor.shutdown()
+        print("文件上传完成")
+    pass
 
 
 def download_file(item_dict):
@@ -61,10 +92,13 @@ def handle_db_collection():
     with ThreadPoolExecutor(MAX_WORKS) as executor:
         for item_dict in db_collection.find({'original_file_info.file_size': 0}):
             executor.submit(download_file, item_dict)
+        executor.shutdown()
+        print("文件下载完成")
     pass
 
 
 # 入口
 if __name__ == "__main__":
     handle_db_collection()
+    upload_file()
     pass

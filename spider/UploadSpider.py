@@ -1,12 +1,8 @@
-import os
 import json
 import time
-import random
-import hashlib
 import requests
 from model import BatchRequest
 from pymongo import MongoClient
-from concurrent.futures import ThreadPoolExecutor
 
 # 数据库
 db_client = MongoClient(host="127.0.0.1", port=27017)
@@ -21,9 +17,16 @@ headers = {"X-Bmob-Application-Id": "390b6a10efdb099c82520d7478ce4bab",
            "Content-Type": "application/json"}
 
 
+def get_o_clock_of_today():
+    local_time = time.localtime(time.time())
+    o_clock = time.mktime(time.strptime(time.strftime('%Y-%m-%d 00:00:00', local_time), '%Y-%m-%d %H:%M:%S'))
+    return int(o_clock)
+
+
 def page_upload(page, limit):
     request_list = []
-    for item_dict in db_collection.find().skip(page * limit).limit(limit):
+    for item_dict in db_collection.find({'create_timestamp': {'$gt': get_o_clock_of_today()}}).skip(page * limit).limit(
+            limit):
         item_dict.pop("_id")
         item_dict.pop("create_timestamp")
         item_dict.pop("update_timestamp")
