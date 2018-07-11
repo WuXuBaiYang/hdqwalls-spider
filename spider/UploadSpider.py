@@ -46,8 +46,11 @@ def upload_file():
             for file in files:
                 file_path = os.path.join(root, file)
                 if os.path.getctime(file_path) > get_o_clock_of_today():
-                    executor.submit(bucket.put_object_from_file, "original_image/" + file, file_path)
-                    print("正在上传", file)
+                    try:
+                        executor.submit(bucket.put_object_from_file, "original_image/" + file, file_path)
+                        print("正在上传", file)
+                    except:
+                        print("上传失败，请重试")
         executor.shutdown()
         print("文件上传完成")
     pass
@@ -83,6 +86,6 @@ def page_upload(page, limit):
 
 # 入口
 if __name__ == "__main__":
-    page_upload(0, 50)
+    # page_upload(0, 50)
     upload_file()
     pass

@@ -99,7 +99,7 @@ def parse_paging(index, loop):
                     url = base_url + tag.get("href")
                     title = tag.get("title").rstrip("Wallpaper").strip()
                     if db_collection.find({"detail_url": url}).count() <= 0:
-                        executor.submit(parse_wallpaper_detail, index, url, title)
+                        executor.submit(parse_wallpaper_detail, url, title)
                     else:
                         loop = False
                 executor.shutdown()
